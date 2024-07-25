@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cover Letter Generator</title>
+    <link rel="stylesheet" type="text/css" href="static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cover Letter Generator</h1>
+        <form id="uploadForm" enctype="multipart/form-data" method="POST">
+            <input type="text" id="companyName" name="company_name" placeholder="Company Name" required>
+            <input type="file" id="resume" name="resume" accept="application/pdf" required>
+            <button onclick="generateCoverLetter()">Generate Cover Letter</button>       
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+    <script src="static/js/scripts.js"></script>
+</body>
+</html>
