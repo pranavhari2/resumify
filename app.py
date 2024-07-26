@@ -43,10 +43,11 @@ def generate_cover_letter_endpoint():
 
     company_name = data['company']
     resume_text = data['resume']
+    position = data['position']
 
     # cover_letter = generate_cover_letter(company_name)
 
-    cover_letter = generate_cover_letter(company_name, resume_text)
+    cover_letter = generate_cover_letter(company_name, resume_text, position)
 
     # print(cover_letter)
 
@@ -74,10 +75,12 @@ def extract_text_from_resume(file_path):
     else:
         return ''
 
-def generate_cover_letter(company_name, resume_text):
+def generate_cover_letter(company_name, resume_text, position):
     openai.api_key = openai_api_key
     
-    prompt = f"Write a cover letter for a software engineer position at {company_name}. Mention the company's values, recent projects, and why I would be a good fit. Here is my resume:\n{resume_text}"
+    prompt = f"Write a cover letter for a {position} position at {company_name}. Mention the company's values, recent projects, and emphazise on why I would be a good fit. Here is my resume:\n{resume_text}."
+    # prompt = f" Can you give me a resume roast? Here is my resume:\n{resume_text}."
+
 
     chat_completion = client.chat.completions.create(
     messages=[
