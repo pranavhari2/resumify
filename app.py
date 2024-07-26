@@ -30,22 +30,23 @@ def index():
 @app.route('/generate-cover-letter', methods=['POST'])
 def generate_cover_letter_endpoint():
 
-    company_name = request.form.get('company_name')
+    # company_name = request.form.get('company_name')
+    # resume = request.files['resume']
 
-    print(company_name)
-    resume = request.files['resume']
+    # filename = secure_filename(resume.filename)
+    # file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    # resume.save(file_path)
 
-    filename = secure_filename(resume.filename)
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    resume.save(file_path)
+    # resume_text = extract_text_from_resume(file_path)
 
-    resume_text = extract_text_from_resume(file_path)
-    cover_letter = generate_cover_letter(company_name, resume_text)
+    data = request.json 
 
-    # company_name = data['company_name']
-    # resume = data['resume']
+    company_name = data['company']
+    resume_text = data['resume']
 
     # cover_letter = generate_cover_letter(company_name)
+
+    cover_letter = generate_cover_letter(company_name, resume_text)
 
     # print(cover_letter)
 
