@@ -44,10 +44,11 @@ def generate_cover_letter_endpoint():
     company_name = data['company']
     resume_text = data['resume']
     position = data['position']
+    description = data['description']
 
     # cover_letter = generate_cover_letter(company_name)
 
-    cover_letter = generate_cover_letter(company_name, resume_text, position)
+    cover_letter = generate_cover_letter(company_name, resume_text, position, description)
 
     # print(cover_letter)
 
@@ -75,10 +76,10 @@ def extract_text_from_resume(file_path):
     else:
         return ''
 
-def generate_cover_letter(company_name, resume_text, position):
+def generate_cover_letter(company_name, resume_text, position, description):
     openai.api_key = openai_api_key
     
-    prompt = f"Write a cover letter for a {position} position at {company_name}. Mention the company's values, recent projects, and emphazise on why I would be a good fit. Here is my resume:\n{resume_text}."
+    prompt = f"Write a cover letter for a {position} position at {company_name}. Mention the company's values, recent projects, and emphazise on why I would be a good fit. Here is my resume:\n{resume_text}. Here is the descriptio of the job {description}"
     # prompt = f" Can you give me a resume roast? Here is my resume:\n{resume_text}."
 
 

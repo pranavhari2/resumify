@@ -2,6 +2,8 @@ async function generateCoverLetter() {
     const companyName = document.getElementById('companyName').value;
     const resume = document.getElementById('resume').value;
     const position = document.getElementById('position').value;
+    const description = document.getElementById('description').value;
+
     // const resumeFile = document.getElementById('resume').files[0];
     const resultDiv = document.getElementById('result');
 
@@ -14,7 +16,7 @@ async function generateCoverLetter() {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({company: companyName, resume: resume, position: position}) 
+        body: JSON.stringify({company: companyName, resume: resume, position: position, description: description}) 
     });
 
     const data = await response.json();
