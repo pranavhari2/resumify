@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 import os
-import PyPDF2
+from pypdf import PdfReader
 import docx2txt
 from werkzeug.utils import secure_filename
 from openai import OpenAI
@@ -20,9 +20,14 @@ client = OpenAI(
 
 app = Flask(__name__)
 
+# Add folder for storage
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+# Add routers 
 @app.route('/')
 def index():
     return send_from_directory('.', 'index.html')
@@ -31,25 +36,20 @@ def index():
 def generate_cover_letter_endpoint():
 
     company_name = request.form.get('company_name')
+    position = request.form.get('position')
     resume = request.files['resume']
 
     filename = secure_filename(resume.filename)
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     resume.save(file_path)
 
-    resume_text = extract_text_from_resume(file_path)
+    reader = PdfReader(file_path) 
+    page = reader.pages[0] 
+    resume_text = page.extract_text() 
 
-    # data = request.json 
+    print(resume_text)
 
-    # company_name = data['company']
-    # resume_text = data['resume']
-    # position = data['position']
-
-    # cover_letter = generate_cover_letter(company_name)
-
-    cover_letter = generate_cover_letter(company_name, resume_text)
-
-    # print(cover_letter)
+    cover_letter = generate_cover_letter(company_name, resume_text, position)
 
     return jsonify({"cover_letter": cover_letter})
 
@@ -62,24 +62,16 @@ def generate_cover_letter_endpoint():
 #     return comp_name
 
 def extract_text_from_resume(file_path):
-    if file_path.endswith('.pdf'):
-        with open(file_path, 'rb') as file:
-            reader = PyPDF2.PdfFileReader(file)
-            text = ''
-            for page_num in range(reader.numPages):
-                page = reader.getPage(page_num)
-                text += page.extractText()
-        return text
-    elif file_path.endswith('.docx'):
-        return docx2txt.process(file_path)
-    else:
-        return ''
+    reader = PdfReader(file_path) 
+    page = reader.pages[0] 
+    text = page.extract_text() 
+    print(text) 
 
-def generate_cover_letter(company_name, resume_text, position):
+
+def generate_cover_letter(company_name, resume, position):
     openai.api_key = openai_api_key
     
-    prompt = f"Write a cover letter for a {position} position at {company_name}. Mention the company's values, recent projects, and emphazise on why I would be a good fit. Here is my resume:\n{resume_text}."
-    # prompt = f" Can you give me a resume roast? Here is my resume:\n{resume_text}."
+    prompt = f"Write a cover letter for a {position} position at {company_name}. Mention the company's values, recent projects, and emphazise on why I would be a good fit. Here is my resume:\n{resume}. Make it look human written "
 
 
     chat_completion = client.chat.completions.create(

@@ -8,12 +8,10 @@ async function generateCoverLetter() {
     const formData = new FormData();
     formData.append('company_name', companyName);
     formData.append('resume', resumeFile);
+    formData.append('position', position)
 
     const response = await fetch('/generate-cover-letter', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
         body: formData 
     });
 
